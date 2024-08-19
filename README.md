@@ -6,7 +6,6 @@ To develop a neural network regression model for the given dataset.
 
 ## THEORY
 
-Explain the problem statement
 
 ## Neural Network Model
 
@@ -47,27 +46,73 @@ Evaluate the model with the testing data.
 ### Register Number:
 ```python
 
-Include your code here
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import MinMaxScaler
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Dense
 
+from google.colab import auth
+import gspread
+from google.auth import default
+auth.authenticate_user()
+creds,_=default()
+gc=gspread.authorize(creds)
 
+worksheet=gc.open('e1').sheet1
+data=worksheet.get_all_values()
+
+dataset1=pd.DataFrame(data[1:],columns=data[0])
+dataset1=dataset1.astype(float)
+dataset1.head()
+
+x=dataset1.values
+y=dataset1.values
+
+x_train,x_test,y_train,y_test=train_test_split(x,y,test_size=0.33,random_state=33)
+
+Scaler=MinMaxScaler()
+Scaler.fit(x_train)
+x_train=Scaler.transform(x_train)
+
+ai_brain=Sequential([
+    Dense(8,activation='relu'),
+    Dense(10,activation='relu'),
+    Dense(1)
+])
+
+ai_brain.compile(optimizer='rmsprop',loss='mse')
+ai_brain.fit(x_train,y_train,epochs=20)
+
+loss_df=pd.DataFrame(ai_brain.history.history)
+loss_df.plot()
+
+ai_brain.evaluate(x_test,y_test)
+
+X_n1 = [[3,5]]
+X_n1_1 = Scaler.transform(X_n1)
+ai_brain.predict(X_n1_1)
 ```
 ## Dataset Information
 
-Include screenshot of the dataset
+![image](https://github.com/user-attachments/assets/456870de-513f-4f51-a11f-1c838b090757)
 
-## OUTPUT
+## Epoch 
+
+![image](https://github.com/user-attachments/assets/81c0ec30-a1a2-4d94-a6d0-72eecc41c065)
+
 
 ### Training Loss Vs Iteration Plot
 
-Include your plot here
+![image](https://github.com/user-attachments/assets/23e105bd-a7b5-4a3f-9625-d1578ad4b3b6)
 
 ### Test Data Root Mean Squared Error
 
-Find the test data root mean squared error
+![image](https://github.com/user-attachments/assets/5041860c-88d3-4d63-a41e-db3475190ef0)
 
 ### New Sample Data Prediction
 
-Include your sample input and output here
+![image](https://github.com/user-attachments/assets/10b09ff5-3be9-4ee5-bd9f-90d6d3db2369)
 
 ## RESULT
 
